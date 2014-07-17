@@ -17,17 +17,13 @@ module.exports = {
 
   /* not implemented yet */
   user_access: {
-      users_enabled: true,            // show and allow logins
-      registration_enabled: true,     // allow new users to register themselves
+      users_enabled: false,            // show and allow logins
+      registration_enabled: false,     // allow new users to register themselves
       bouncer_mode_allowed: true      // allow IRC connections to persist when users disconnect
   },
 
   dev: {
     port: process.env.PORT || 3000
-  },
-
-  prod: {
-    port: process.env.PORT || 14858 // Nodester port
   },
 
   use_polling: process.env.USE_POLLING || false, // Use polling if websockets aren't supported

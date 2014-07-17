@@ -2,7 +2,7 @@ script(id="chat_application", type="text/html")
   .sidebar
     #logo
       img(src='/assets/images/subway.png')
-    h2 Subway
+    h2 Think-Silicon
       br
       small IRC Client
     #user-box
@@ -14,30 +14,30 @@ script(id="chat_application", type="text/html")
 
 script(id="add_new_channel", type="text/html")
   i(class="icon-plus-sign spacing-right")
-  Add new channel 
+  Add new channel
 
 script(id="add_new_channel_form", type="text/html")
-  input#channelname(type="text", placeholder="#channelname", autofocus)
+  input#channelname(type="text", placeholder="#general", autofocus)
 
 script(id="load_image", type="text/html")
   img(id="loading_image", src="/assets/images/loading.gif")
 
 script(id="overview_home", type="text/html")
-  ul
-    li.overview_button#connection
-      img(src="/assets/images/connection.svg")
-      span New Connection
-    li.overview_button#settings
-      img(src="/assets/images/settings.svg")
-      span Settings
-    {{^loggedIn}}
-    li.overview_button#login
-      img(src="/assets/images/login.svg")
-      span Login
-    li.overview_button#register
-      img(src="/assets/images/register.svg")
-      span Register
-    {{/loggedIn}}
+  form.form-inline
+    .control-group
+      label(for="connect-nick") Username
+      input#connect-nick(type="text")
+      input#connect-server(type="hidden", value="yellow")
+    .control-group
+      input#connect-remember(type="checkbox",checked="checked")
+    .control-group
+      {{#loggedIn}}
+      label.checkbox(for="connect-keep-alive", style="width:75%") Keep connection alive after browser closed
+      input#connect-keep-alive(type="checkbox")
+      {{/loggedIn}}
+    .control-group
+      .controls
+        button#connect-button.btn.btn-primary.spacing-right(type="button") Connect
 
 script(id="overview", type="text/html")
   #overview

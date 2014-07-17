@@ -31,7 +31,7 @@ $(function() {
   try {
     window.unity.api = external.getUnityObject(1.0);
     window.unity.init({
-      name: "Subway IRC",
+      name: "Think-Silicon Chat",
       iconUrl: window.location.protocol+"//"+window.location.host+"/assets/images/subway.png",
       onInit: function() {
         window.unity.connected = true;
@@ -47,8 +47,8 @@ $(function() {
 
   // **TODO**: is there a better place for this to go?
   $(window).bind('beforeunload', function() {
-    if(window.irc.connected && window.irc.loggedIn) { 
-      return "If you leave, you'll be signed out of Subway.";
+    if(window.irc.connected && window.irc.loggedIn) {
+      return "If you leave, you'll be signed out of IRC.";
     }
   });
 
@@ -159,6 +159,7 @@ $(function() {
   irc.socket.on('motd', function(data) {
     var message = new Message({sender: 'status', raw: data.motd, type: 'motd'});
     irc.chatWindows.getByName('status').stream.add(message);
+    irc.emit('join', '#general');
   });
 
   // Whois data
@@ -204,7 +205,7 @@ $(function() {
   irc.socket.on('+mode', function(data) {
     var chatWindow = irc.chatWindows.getByName(data.channel.toLowerCase());
 
-    var message = 
+    var message =
       'sets mode +' + data.mode + ' on ' + (data.argument ? data.argument : data.channel);
 
     chatWindow.stream.add({sender: data.by, raw: message, type: 'mode'});
@@ -213,7 +214,7 @@ $(function() {
   irc.socket.on('-mode', function(data) {
     var chatWindow = irc.chatWindows.getByName(data.channel.toLowerCase());
 
-    var message = 
+    var message =
       'sets mode -' + data.mode + ' on ' + (data.argument ? data.argument : data.channel);
 
     chatWindow.stream.add({sender: data.by, raw: message, type: 'mode'});
@@ -243,6 +244,8 @@ $(function() {
         channel = irc.chatWindows.getByName(chanName);
       }
       channel.userList.add({nick: data.nick, role: data.role, idle:0, user_status: 'idle', activity: ''});
+      irc.socket.emit('getOldMessages',{channelName: '#general', skip:0, amount: 50});
+
       var joinMessage = new Message({type: 'join', nick: data.nick});
       channel.stream.add(joinMessage);
     }
@@ -365,7 +368,7 @@ $(function() {
   irc.socket.on('login_error', function(data) {
     irc.appView.showError(data.message);
   });
-  
+
   irc.socket.on('register_error', function(data) {
     irc.appView.showError(data.message);
   });
@@ -549,7 +552,7 @@ $(function() {
     if (typeof irc.chatWindows.getByName(target) === 'undefined') {
       irc.chatWindows.add({name: target, type: 'pm'});
     }
-    irc.socket.emit('getOldMessages',{channelName: target, skip:0, amount: 50});
+    irc.socket.emit('getOldMessages',{channelName: target, skip:0, amount: 100});
     irc.socket.emit('say', {
       target: target,
       message: args.splice(1).join(" ")
